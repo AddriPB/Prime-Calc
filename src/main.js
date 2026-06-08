@@ -229,6 +229,29 @@ function closeCardModal() {
   blockCalculator();
 }
 
+function formatCardNumber(value) {
+  return value
+    .replace(/\D/g, "")
+    .slice(0, 16)
+    .replace(/(.{4})/g, "$1 ")
+    .trim();
+}
+
+function formatExpiryDate(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 4);
+  if (digits.length <= 2) return digits;
+
+  return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+}
+
+function handleCardNumberInput(event) {
+  event.currentTarget.value = formatCardNumber(event.currentTarget.value);
+}
+
+function handleExpiryInput(event) {
+  event.currentTarget.value = formatExpiryDate(event.currentTarget.value);
+}
+
 function handleContributionSubmit(event) {
   event.preventDefault();
   const form = event.currentTarget;
@@ -487,6 +510,7 @@ function renderApp() {
             autocomplete="cc-number"
             placeholder="1234 5678 9012 3456"
             pattern="[0-9 ]{12,23}"
+            maxlength="19"
             required
           >
         </label>
@@ -500,6 +524,7 @@ function renderApp() {
               autocomplete="cc-exp"
               placeholder="MM/AA"
               pattern="(0[1-9]|1[0-2])\/[0-9]{2}"
+              maxlength="5"
               required
             >
           </label>
@@ -563,6 +588,8 @@ function bindEvents() {
   });
   document.querySelector("[data-card-close]").addEventListener("click", () => closeCardModal());
   document.querySelector("[data-card-form]").addEventListener("submit", handleContributionSubmit);
+  document.querySelector('input[name="cardNumber"]').addEventListener("input", handleCardNumberInput);
+  document.querySelector('input[name="expiry"]').addEventListener("input", handleExpiryInput);
   document.querySelector("[data-card-modal]").addEventListener("cancel", (event) => {
     event.preventDefault();
     closeCardModal();
