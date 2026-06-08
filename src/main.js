@@ -50,6 +50,7 @@ const adMessages = [
 let currentInput = "0";
 let storedValue = null;
 let pendingOperator = null;
+let shouldResetInput = false;
 let adId = 0;
 let calculatorBlocked = false;
 let keyOrder = [
@@ -96,7 +97,8 @@ function updateDisplay() {
 
 function inputDigit(digit) {
   if (calculatorBlocked) return;
-  currentInput = currentInput === "0" ? digit : `${currentInput}${digit}`;
+  currentInput = currentInput === "0" || shouldResetInput ? digit : `${currentInput}${digit}`;
+  shouldResetInput = false;
   updateDisplay();
   if (CONFIG.SATIRE_MODE_ENABLED && CONFIG.ADS_ON_DIGIT_ENABLED) {
     createAdPopup("digit");
@@ -108,14 +110,39 @@ function clearCalculator() {
   currentInput = "0";
   storedValue = null;
   pendingOperator = null;
+  shouldResetInput = false;
   updateDisplay();
+}
+
+function calculateResult() {
+  if (!pendingOperator || storedValue === null) return Number(currentInput);
+
+  const currentValue = Number(currentInput);
+
+  switch (pendingOperator) {
+    case "+":
+      return storedValue + currentValue;
+    case "-":
+      return storedValue - currentValue;
+    case "×":
+      return storedValue * currentValue;
+    case "/":
+      return currentValue === 0 ? "Erreur" : storedValue / currentValue;
+    default:
+      return currentValue;
+  }
 }
 
 function selectOperator(operator) {
   if (calculatorBlocked) return;
+  if (pendingOperator && !shouldResetInput) {
+    const result = calculateResult();
+    currentInput = formatDisplayValue(result);
+  }
+
   storedValue = Number(currentInput);
   pendingOperator = operator;
-  currentInput = "0";
+  shouldResetInput = true;
   if (CONFIG.SATIRE_MODE_ENABLED) {
     createAdPopup("operator");
     openDemoTab();
@@ -125,12 +152,19 @@ function selectOperator(operator) {
 
 function showPaymentModal() {
   if (calculatorBlocked) return;
+  const result = calculateResult();
+  currentInput = formatDisplayValue(result);
+  storedValue = null;
+  pendingOperator = null;
+  shouldResetInput = true;
+  updateDisplay();
   document.querySelector("[data-payment-modal]").showModal();
 }
 
 function blockCalculator() {
   calculatorBlocked = true;
   pendingOperator = null;
+  shouldResetInput = false;
   currentInput = "BLOQUÉ";
   updateDisplay();
 }
