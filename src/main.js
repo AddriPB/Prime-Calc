@@ -68,6 +68,7 @@ let storedValue = null;
 let pendingOperator = null;
 let shouldResetInput = false;
 let pendingPaymentResult = null;
+let contributionMessage = "";
 let adId = 0;
 let calculatorBlocked = false;
 let keyOrder = [
@@ -116,7 +117,7 @@ function updateDisplay() {
   display.textContent = getDisplayText();
   status.textContent = pendingOperator
     ? `Opérateur ${pendingOperator} sélectionné`
-    : "Saisie normale des chiffres active";
+    : contributionMessage || "Saisie normale des chiffres active";
 
   calculator.classList.toggle("is-blocked", calculatorBlocked);
 }
@@ -137,6 +138,8 @@ function clearCalculator() {
   storedValue = null;
   pendingOperator = null;
   shouldResetInput = false;
+  pendingPaymentResult = null;
+  contributionMessage = "";
   updateDisplay();
 }
 
@@ -179,6 +182,7 @@ function selectOperator(operator) {
 
 function showPaymentModal() {
   if (calculatorBlocked) return;
+  contributionMessage = "";
   pendingPaymentResult = calculateResult();
   document.querySelector("[data-payment-modal]").showModal();
 }
@@ -221,6 +225,7 @@ function closeCardModal() {
   const modal = document.querySelector("[data-card-modal]");
   if (modal.open) modal.close();
   pendingPaymentResult = null;
+  contributionMessage = "";
   blockCalculator();
 }
 
@@ -229,9 +234,10 @@ function handleContributionSubmit(event) {
   const form = event.currentTarget;
   if (!form.reportValidity()) return;
 
-  const message = document.querySelector("[data-card-message]");
-  message.textContent = "merci pour votre contribution";
-  message.hidden = false;
+  const modal = document.querySelector("[data-card-modal]");
+  if (modal.open) modal.close();
+
+  contributionMessage = "merci pour votre contribution";
   currentInput = formatDisplayValue(pendingPaymentResult);
   storedValue = null;
   pendingOperator = null;
