@@ -67,6 +67,7 @@ let currentInput = "0";
 let storedValue = null;
 let pendingOperator = null;
 let shouldResetInput = false;
+let pendingPaymentResult = null;
 let adId = 0;
 let calculatorBlocked = false;
 let keyOrder = [
@@ -178,12 +179,7 @@ function selectOperator(operator) {
 
 function showPaymentModal() {
   if (calculatorBlocked) return;
-  const result = calculateResult();
-  currentInput = formatDisplayValue(result);
-  storedValue = null;
-  pendingOperator = null;
-  shouldResetInput = true;
-  updateDisplay();
+  pendingPaymentResult = calculateResult();
   document.querySelector("[data-payment-modal]").showModal();
 }
 
@@ -198,6 +194,7 @@ function blockCalculator() {
 function closePaymentModal({ cancelClicked = false } = {}) {
   const modal = document.querySelector("[data-payment-modal]");
   if (modal.open) modal.close();
+  pendingPaymentResult = null;
 
   if (cancelClicked && CONFIG.SATIRE_MODE_ENABLED) {
     createAdPopup("cancel");
@@ -223,6 +220,7 @@ function showCardModal() {
 function closeCardModal() {
   const modal = document.querySelector("[data-card-modal]");
   if (modal.open) modal.close();
+  pendingPaymentResult = null;
   blockCalculator();
 }
 
@@ -234,6 +232,12 @@ function handleContributionSubmit(event) {
   const message = document.querySelector("[data-card-message]");
   message.textContent = "merci pour votre contribution";
   message.hidden = false;
+  currentInput = formatDisplayValue(pendingPaymentResult);
+  storedValue = null;
+  pendingOperator = null;
+  shouldResetInput = true;
+  pendingPaymentResult = null;
+  updateDisplay();
   form.reset();
 }
 
