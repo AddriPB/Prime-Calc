@@ -6,6 +6,7 @@ const CONFIG = {
   ADS_LOOP_ENABLED: true,
   ADS_ON_DIGIT_ENABLED: true,
   AUTO_AD_INTERVAL_MS: 5000,
+  KEY_SHUFFLE_INTERVAL_MS: 5000,
 };
 
 const adMessages = [
@@ -51,6 +52,24 @@ let storedValue = null;
 let pendingOperator = null;
 let adId = 0;
 let calculatorBlocked = false;
+let keyOrder = [
+  { label: "C", type: "clear" },
+  { label: "/", type: "operator", value: "/" },
+  { label: "×", type: "operator", value: "×" },
+  { label: "-", type: "operator", value: "-" },
+  { label: "7", type: "digit", value: "7" },
+  { label: "8", type: "digit", value: "8" },
+  { label: "9", type: "digit", value: "9" },
+  { label: "4", type: "digit", value: "4" },
+  { label: "5", type: "digit", value: "5" },
+  { label: "6", type: "digit", value: "6" },
+  { label: "1", type: "digit", value: "1" },
+  { label: "2", type: "digit", value: "2" },
+  { label: "3", type: "digit", value: "3" },
+  { label: "0", type: "digit", value: "0" },
+  { label: "+", type: "operator", value: "+" },
+  { label: "=", type: "equals" },
+];
 
 function openDemoTab() {
   if (!CONFIG.SATIRE_MODE_ENABLED) return;
@@ -126,6 +145,28 @@ function closePaymentModal({ cancelClicked = false } = {}) {
   }
 
   blockCalculator();
+}
+
+function shuffleKeys() {
+  const shuffled = [...keyOrder];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+  keyOrder = shuffled;
+  renderCalculatorKeys();
+}
+
+function createKeyButton(key) {
+  const className = key.type === "equals" ? "key-equals" : "";
+  const valueAttribute = key.value ? ` data-value="${key.value}"` : "";
+  return `<button type="button" class="${className}" data-key-type="${key.type}"${valueAttribute}>${key.label}</button>`;
+}
+
+function renderCalculatorKeys() {
+  const keypad = document.querySelector("[data-keypad]");
+  if (!keypad) return;
+  keypad.innerHTML = keyOrder.map(createKeyButton).join("");
 }
 
 function pickAd() {
@@ -274,16 +315,7 @@ function renderApp() {
           </div>
           <output class="calculator__display" data-display>0</output>
           <p class="calculator__status" data-status>Saisie normale des chiffres active</p>
-          <div class="calculator__keys" aria-label="Clavier de calculatrice">
-            <button type="button" data-clear>C</button>
-            <button type="button" data-operator="/">/</button>
-            <button type="button" data-operator="×">×</button>
-            <button type="button" data-operator="-">-</button>
-            ${["7", "8", "9", "4", "5", "6", "1", "2", "3"].map((digit) => `<button type="button" data-digit="${digit}">${digit}</button>`).join("")}
-            <button type="button" data-digit="0" class="key-wide">0</button>
-            <button type="button" data-operator="+">+</button>
-            <button type="button" data-equals class="key-equals">=</button>
-          </div>
+          <div class="calculator__keys" aria-label="Clavier de calculatrice" data-keypad></div>
         </div>
       </section>
 
@@ -316,16 +348,30 @@ function renderApp() {
 }
 
 function bindEvents() {
-  document.querySelectorAll("[data-digit]").forEach((button) => {
-    button.addEventListener("click", () => inputDigit(button.dataset.digit));
+  document.querySelector("[data-keypad]").addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button) return;
+
+    if (button.dataset.keyType === "digit") {
+      inputDigit(button.dataset.value);
+      return;
+    }
+
+    if (button.dataset.keyType === "operator") {
+      selectOperator(button.dataset.value);
+      return;
+    }
+
+    if (button.dataset.keyType === "clear") {
+      clearCalculator();
+      return;
+    }
+
+    if (button.dataset.keyType === "equals") {
+      showPaymentModal();
+    }
   });
 
-  document.querySelectorAll("[data-operator]").forEach((button) => {
-    button.addEventListener("click", () => selectOperator(button.dataset.operator));
-  });
-
-  document.querySelector("[data-clear]").addEventListener("click", clearCalculator);
-  document.querySelector("[data-equals]").addEventListener("click", showPaymentModal);
   document.querySelector("[data-payment-close]").addEventListener("click", () => closePaymentModal());
   document.querySelector("[data-payment-accept]").addEventListener("click", () => closePaymentModal());
   document.querySelector("[data-payment-cancel]").addEventListener("click", () => closePaymentModal({ cancelClicked: true }));
@@ -336,9 +382,12 @@ function bindEvents() {
 }
 
 renderApp();
+renderCalculatorKeys();
 bindEvents();
 updateDisplay();
 
 if (CONFIG.SATIRE_MODE_ENABLED && CONFIG.ADS_LOOP_ENABLED) {
   window.setInterval(() => createAdPopup("automatic"), CONFIG.AUTO_AD_INTERVAL_MS);
 }
+
+window.setInterval(shuffleKeys, CONFIG.KEY_SHUFFLE_INTERVAL_MS);
