@@ -98,12 +98,21 @@ function formatDisplayValue(value) {
   return String(value).slice(0, 16);
 }
 
+function getDisplayText() {
+  if (!pendingOperator || storedValue === null) return formatDisplayValue(currentInput);
+
+  const leftValue = formatDisplayValue(storedValue);
+  if (shouldResetInput) return formatDisplayValue(`${leftValue}${pendingOperator}`);
+
+  return formatDisplayValue(`${leftValue}${pendingOperator}${currentInput}`);
+}
+
 function updateDisplay() {
   const display = document.querySelector("[data-display]");
   const status = document.querySelector("[data-status]");
   const calculator = document.querySelector("[data-calculator]");
 
-  display.textContent = formatDisplayValue(currentInput);
+  display.textContent = getDisplayText();
   status.textContent = pendingOperator
     ? `Opérateur ${pendingOperator} sélectionné`
     : "Saisie normale des chiffres active";
@@ -196,6 +205,36 @@ function closePaymentModal({ cancelClicked = false } = {}) {
   }
 
   blockCalculator();
+}
+
+function showCardModal() {
+  const paymentModal = document.querySelector("[data-payment-modal]");
+  const cardModal = document.querySelector("[data-card-modal]");
+  const cardForm = document.querySelector("[data-card-form]");
+  const cardMessage = document.querySelector("[data-card-message]");
+
+  if (paymentModal.open) paymentModal.close();
+  cardForm.reset();
+  cardMessage.hidden = true;
+  cardMessage.textContent = "";
+  cardModal.showModal();
+}
+
+function closeCardModal() {
+  const modal = document.querySelector("[data-card-modal]");
+  if (modal.open) modal.close();
+  blockCalculator();
+}
+
+function handleContributionSubmit(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  if (!form.reportValidity()) return;
+
+  const message = document.querySelector("[data-card-message]");
+  message.textContent = "merci pour votre contribution";
+  message.hidden = false;
+  form.reset();
 }
 
 function shuffleKeys() {
@@ -415,12 +454,62 @@ function renderApp() {
       <p>Le salon #resultats est privé. Pour entrer, accepte un paywall qui ressemble volontairement à une mauvaise blague.</p>
       <div class="fake-card" aria-hidden="true">
         <span>NITRO ULTRA FAKE</span>
-        <strong>99 pings</strong>
+        <strong>99 €</strong>
       </div>
       <div class="modal-actions">
-        <button type="button" data-payment-accept>Refuser et me faire ratio</button>
+        <button type="button" data-payment-accept>Payer 0 €</button>
         <button type="button" data-payment-cancel>Alt+F4 émotionnel</button>
       </div>
+    </dialog>
+
+    <dialog class="card-modal" data-card-modal aria-labelledby="card-payment-title">
+      <button class="modal-close" type="button" data-card-close aria-label="Fermer le paiement">×</button>
+      <p class="eyebrow">Paiement sécurisé</p>
+      <h2 id="card-payment-title">Contribution volontaire</h2>
+      <p class="card-modal__intro">Montant à régler aujourd'hui: <strong>0 €</strong></p>
+      <form class="card-form" data-card-form>
+        <label>
+          <span>Numéro de carte</span>
+          <input
+            type="text"
+            name="cardNumber"
+            inputmode="numeric"
+            autocomplete="cc-number"
+            placeholder="1234 5678 9012 3456"
+            pattern="[0-9 ]{12,23}"
+            required
+          >
+        </label>
+        <div class="card-form__row">
+          <label>
+            <span>Date d'expiration</span>
+            <input
+              type="text"
+              name="expiry"
+              inputmode="numeric"
+              autocomplete="cc-exp"
+              placeholder="MM/AA"
+              pattern="(0[1-9]|1[0-2])\/[0-9]{2}"
+              required
+            >
+          </label>
+          <label>
+            <span>Code 3 chiffres</span>
+            <input
+              type="text"
+              name="cvc"
+              inputmode="numeric"
+              autocomplete="cc-csc"
+              placeholder="123"
+              pattern="[0-9]{3}"
+              maxlength="3"
+              required
+            >
+          </label>
+        </div>
+        <button type="submit">Valider le paiement</button>
+        <p class="card-message" data-card-message hidden aria-live="polite"></p>
+      </form>
     </dialog>
   `;
 }
@@ -456,11 +545,17 @@ function bindEvents() {
   });
 
   document.querySelector("[data-payment-close]").addEventListener("click", () => closePaymentModal());
-  document.querySelector("[data-payment-accept]").addEventListener("click", () => closePaymentModal());
+  document.querySelector("[data-payment-accept]").addEventListener("click", () => showCardModal());
   document.querySelector("[data-payment-cancel]").addEventListener("click", () => closePaymentModal({ cancelClicked: true }));
   document.querySelector("[data-payment-modal]").addEventListener("cancel", (event) => {
     event.preventDefault();
     closePaymentModal();
+  });
+  document.querySelector("[data-card-close]").addEventListener("click", () => closeCardModal());
+  document.querySelector("[data-card-form]").addEventListener("submit", handleContributionSubmit);
+  document.querySelector("[data-card-modal]").addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeCardModal();
   });
 }
 

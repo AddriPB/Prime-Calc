@@ -766,6 +766,105 @@ button {
   background: #fee75c;
 }
 
+.card-modal {
+  width: min(460px, calc(100vw - 28px));
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  padding: 24px;
+  background: #ffffff;
+  color: #18202f;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+}
+
+.card-modal::backdrop {
+  background: rgba(11, 16, 26, 0.72);
+}
+
+.card-modal .modal-close {
+  border: 1px solid #d8dee8;
+  border-radius: 999px;
+  background: #f7f9fc;
+  color: #29354a;
+}
+
+.card-modal .eyebrow {
+  color: #3b6fca;
+  letter-spacing: 0.08em;
+}
+
+.card-modal h2 {
+  margin: 0 42px 8px 0;
+  font-size: 1.55rem;
+  line-height: 1.1;
+  color: #111827;
+}
+
+.card-modal__intro {
+  margin: 0 0 18px;
+  color: #526078;
+}
+
+.card-modal__intro strong {
+  color: #111827;
+}
+
+.card-form {
+  display: grid;
+  gap: 14px;
+}
+
+.card-form label {
+  display: grid;
+  gap: 7px;
+  color: #29354a;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.card-form input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid #b8c2d3;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+  font-weight: 700;
+}
+
+.card-form input:focus {
+  border-color: #2f6fda;
+  outline: 3px solid rgba(47, 111, 218, 0.18);
+}
+
+.card-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.card-form button[type="submit"] {
+  min-height: 48px;
+  border: 0;
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: #1456b8;
+  color: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.card-message {
+  margin: 0;
+  border: 1px solid #bfe8ce;
+  border-radius: 6px;
+  padding: 12px;
+  background: #effaf3;
+  color: #146c2e;
+  font-weight: 900;
+}
+
 @keyframes uglyWiggle {
   0%,
   100% {
