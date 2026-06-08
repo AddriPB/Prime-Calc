@@ -4,34 +4,45 @@ const CONFIG = {
   DEMO_REDIRECT_URL: "https://example.com/",
   SATIRE_MODE_ENABLED: true,
   ADS_LOOP_ENABLED: true,
+  ADS_ON_DIGIT_ENABLED: true,
   AUTO_AD_INTERVAL_MS: 5000,
 };
 
 const adMessages = [
   {
-    title: "Turbo Résultat Premium",
-    body: "Votre addition mérite une expérience VIP sponsorisée par rien du tout.",
-    cta: "Voir l'offre fictive",
+    brand: "NovaBank",
+    title: "Crédit instantané jusqu'à 5 000 €",
+    body: "Une réponse de principe en moins de 3 minutes pour financer vos projets du moment.",
+    cta: "Découvrir l'offre",
+    tag: "Finance",
   },
   {
-    title: "Assurance Parenthèses",
-    body: "Protégez vos calculs contre les priorités opératoires imprévues.",
-    cta: "Simulation locale",
+    brand: "Helio Mobile",
+    title: "Forfait 5G 180 Go à prix réduit",
+    body: "Appels illimités, roaming Europe inclus et activation immédiate en ligne.",
+    cta: "Comparer les forfaits",
+    tag: "Télécom",
   },
   {
-    title: "Pack Zéro Tracking",
-    body: "Nous ne collectons aucune donnée, mais nous occupons tout l'écran.",
-    cta: "Démo neutre",
+    brand: "CasaFlex",
+    title: "Canapé modulable livré en 72 h",
+    body: "Composez votre salon avec des modules premium et une garantie confort 10 ans.",
+    cta: "Voir la collection",
+    tag: "Maison",
   },
   {
-    title: "Crédit Décimales",
-    body: "Payez maintenant, arrondissez plus tard. Publicité 100% factice.",
-    cta: "Ouvrir le néant",
+    brand: "Triply",
+    title: "Séjours urbains dès 49 € la nuit",
+    body: "Des hôtels bien notés, des annulations flexibles et des offres limitées cette semaine.",
+    cta: "Réserver maintenant",
+    tag: "Voyage",
   },
   {
-    title: "Booster de Chiffres",
-    body: "Multipliez votre patience par un nombre absurde de pop-ins.",
-    cta: "Continuer quand même",
+    brand: "FitMeal",
+    title: "Menus protéinés livrés chez vous",
+    body: "Choisissez vos objectifs, recevez vos repas prêts à consommer du lundi au vendredi.",
+    cta: "Créer mon panier",
+    tag: "Bien-être",
   },
 ];
 
@@ -68,6 +79,9 @@ function inputDigit(digit) {
   if (calculatorBlocked) return;
   currentInput = currentInput === "0" ? digit : `${currentInput}${digit}`;
   updateDisplay();
+  if (CONFIG.SATIRE_MODE_ENABLED && CONFIG.ADS_ON_DIGIT_ENABLED) {
+    createAdPopup("digit");
+  }
 }
 
 function clearCalculator() {
@@ -130,26 +144,25 @@ function createAdPopup(reason = "automatic") {
   node.className = "ad-popin";
   node.style.setProperty("--x-offset", `${offset}px`);
   node.style.setProperty("--y-offset", `${offset * 0.7}px`);
-  node.setAttribute("aria-label", `Publicité factice ${ad.title}`);
+  node.setAttribute("aria-label", `Annonce sponsorisée ${ad.title}`);
   node.innerHTML = `
     <div class="ad-popin__chrome">
-      <span>Annonce locale #${String(id + 1).padStart(2, "0")}</span>
+      <span>${ad.brand}</span>
       <button type="button" aria-label="Fermer cette publicité" data-close-ad>×</button>
     </div>
     <div class="ad-popin__visual" aria-hidden="true">
-      <span></span><span></span><span></span>
+      <strong>${ad.tag}</strong>
+      <span></span>
     </div>
+    <p class="ad-popin__label">Sponsorisé · Offre limitée</p>
     <h3>${ad.title}</h3>
     <p>${ad.body}</p>
     <button type="button" data-ad-action>${ad.cta}</button>
-    <small>${reason === "automatic" ? "Apparition automatique" : "Déclenchée par interaction"} · aucun tracking</small>
+    <small>${reason === "automatic" ? "Suggestion personnalisée" : "Recommandation contextuelle"}</small>
   `;
 
   node.querySelector("[data-close-ad]").addEventListener("click", () => {
     node.remove();
-    if (CONFIG.ADS_LOOP_ENABLED && CONFIG.SATIRE_MODE_ENABLED) {
-      window.setTimeout(() => createAdPopup("loop"), 80);
-    }
   });
 
   node.querySelector("[data-ad-action]").addEventListener("click", openDemoTab);
@@ -159,9 +172,14 @@ function createAdPopup(reason = "automatic") {
 function createStaticAd(text, index) {
   return `
     <article class="static-ad static-ad--${index % 4}">
-      <span>Pub factice</span>
-      <strong>${text}</strong>
-      <small>Démo locale · 0 donnée collectée</small>
+      <span>${text.brand}</span>
+      <strong>${text.title}</strong>
+      <p>${text.body}</p>
+      <div>
+        <em>${text.price}</em>
+        <button type="button">Voir</button>
+      </div>
+      <small>${text.meta}</small>
     </article>
   `;
 }
@@ -169,14 +187,62 @@ function createStaticAd(text, index) {
 function renderApp() {
   const app = document.querySelector("#app");
   const staticAds = [
-    "Abonnement Soustraction Gold",
-    "Addition Express avec frais cachés",
-    "Division sponsorisée sans cookies",
-    "Multiplication de pop-ins garantie",
-    "Résultat verrouillé niveau premium",
-    "Pack Décimales inutiles",
-    "Opérateurs sous influence",
-    "Alerte promo: 99,99 euros",
+    {
+      brand: "NovaBank",
+      title: "Prêt personnel express",
+      body: "Réponse immédiate pour vos projets.",
+      price: "TAEG dès 3,9%",
+      meta: "Sous conditions",
+    },
+    {
+      brand: "Helio Mobile",
+      title: "Forfait 5G 180 Go",
+      body: "Activation en quelques minutes.",
+      price: "9,99 €/mois",
+      meta: "Série limitée",
+    },
+    {
+      brand: "CasaFlex",
+      title: "Canapé modulable",
+      body: "Livraison rapide et garantie confort.",
+      price: "-35%",
+      meta: "Jusqu'à dimanche",
+    },
+    {
+      brand: "Triply",
+      title: "Week-ends urbains",
+      body: "Hôtels bien notés, annulation flexible.",
+      price: "dès 49 €",
+      meta: "Places limitées",
+    },
+    {
+      brand: "FitMeal",
+      title: "Menus protéinés",
+      body: "Repas prêts à consommer livrés chez vous.",
+      price: "6,40 €/repas",
+      meta: "Sans engagement",
+    },
+    {
+      brand: "ZenDrive",
+      title: "Assurance auto flexible",
+      body: "Contrat en ligne avec assistance 24/7.",
+      price: "dès 18 €/mois",
+      meta: "Devis immédiat",
+    },
+    {
+      brand: "Cloudly",
+      title: "Stockage sécurisé 2 To",
+      body: "Sauvegarde automatique multi-appareils.",
+      price: "4,99 €/mois",
+      meta: "Essai 30 jours",
+    },
+    {
+      brand: "Prime Access",
+      title: "Résultat prioritaire",
+      body: "Accédez aux réponses sans attente.",
+      price: "99,99 €",
+      meta: "Offre premium",
+    },
   ];
 
   app.innerHTML = `
@@ -186,16 +252,16 @@ function renderApp() {
           <p class="eyebrow">Prime Calc</p>
           <h1>La calculatrice qui vend avant de calculer</h1>
         </div>
-        <p class="satire-notice">Satire / démonstration UX. Aucun vrai paiement, aucune vraie publicité, aucun tracking.</p>
+        <p class="satire-notice">Démonstration UX satirique. Aucune transaction, aucune régie externe, aucun tracking.</p>
       </header>
 
-      <aside class="ad-rail ad-rail--left" aria-label="Fausses publicités gauche">
+      <aside class="ad-rail ad-rail--left" aria-label="Publicités gauche">
         ${staticAds.slice(0, 4).map(createStaticAd).join("")}
       </aside>
 
       <section class="calculator-zone" aria-label="Calculatrice satirique">
         <div class="background-ads" aria-hidden="true">
-          ${staticAds.map((text, index) => `<span>${text}</span>`).join("")}
+          ${staticAds.map((ad) => `<span>${ad.brand} · ${ad.price}</span>`).join("")}
         </div>
         <div class="calculator" data-calculator>
           <div class="blocked-overlay">
@@ -221,7 +287,7 @@ function renderApp() {
         </div>
       </section>
 
-      <aside class="ad-rail ad-rail--right" aria-label="Fausses publicités droite">
+      <aside class="ad-rail ad-rail--right" aria-label="Publicités droite">
         ${staticAds.slice(4).map(createStaticAd).join("")}
       </aside>
 
@@ -236,13 +302,13 @@ function renderApp() {
       <button class="modal-close" type="button" data-payment-close aria-label="Fermer le paywall">×</button>
       <p class="eyebrow">Résultat disponible</p>
       <h2 id="payment-title">Débloquez le calcul pour 99,99 €</h2>
-      <p>Cette modale est une satire locale: aucun paiement réel n'est possible, aucune donnée n'est demandée.</p>
+      <p>Accès prioritaire au résultat avec traitement premium. Aucune donnée bancaire n'est demandée dans cette démonstration.</p>
       <div class="fake-card" aria-hidden="true">
         <span>PRIME PAYWALL</span>
         <strong>99,99 €</strong>
       </div>
       <div class="modal-actions">
-        <button type="button" data-payment-accept>Je refuse le vrai paiement fictif</button>
+        <button type="button" data-payment-accept>Refuser l'accès premium</button>
         <button type="button" data-payment-cancel>Annuler</button>
       </div>
     </dialog>

@@ -108,54 +108,98 @@ button {
 
 .background-ads span,
 .static-ad {
-  border: 2px solid #17211d;
+  border: 1px solid #d7dce2;
   background: #ffffff;
-  color: #17211d;
-  font-weight: 900;
-  text-transform: uppercase;
+  color: #17212b;
 }
 
 .background-ads span {
   display: grid;
   place-items: center;
   min-height: 74px;
-  padding: 10px;
-  color: #d2473d;
-  font-size: 0.8rem;
+  padding: 12px;
+  color: #1f5f97;
+  font-size: 0.82rem;
+  font-weight: 800;
   text-align: center;
 }
 
 .static-ad {
-  min-height: 118px;
-  padding: 12px;
-  box-shadow: 5px 5px 0 #17211d;
+  min-height: 148px;
+  border-radius: 8px;
+  padding: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.62)),
+    linear-gradient(135deg, #f6fbff, #ddeeff);
+  box-shadow: 0 12px 26px rgba(31, 51, 73, 0.16);
 }
 
 .static-ad span,
 .static-ad small {
   display: block;
-  color: #5b625b;
+  color: #5b6875;
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .static-ad strong {
   display: block;
-  margin: 10px 0;
-  font-size: 1.1rem;
-  line-height: 1.05;
+  margin: 8px 0 6px;
+  color: #17212b;
+  font-size: 1.05rem;
+  line-height: 1.12;
+}
+
+.static-ad p {
+  margin: 0 0 10px;
+  color: #4b5c6c;
+  font-size: 0.86rem;
+  line-height: 1.25;
+}
+
+.static-ad div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 10px 0 8px;
+}
+
+.static-ad em {
+  color: #1266d6;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.static-ad button {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: #1266d6;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .static-ad--1 {
-  background: #dbf0ff;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(245, 249, 255, 0.68)),
+    linear-gradient(135deg, #dceeff, #eef6ff);
 }
 
 .static-ad--2 {
-  background: #ffe0df;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(255, 247, 240, 0.7)),
+    linear-gradient(135deg, #fff1df, #ffe1c7);
 }
 
 .static-ad--3 {
-  background: #dff7d5;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(239, 255, 244, 0.7)),
+    linear-gradient(135deg, #e8f8ef, #d4f1df);
 }
 
 .calculator {
@@ -279,7 +323,7 @@ button {
 }
 
 .site-footer .static-ad {
-  min-height: 92px;
+  min-height: 132px;
 }
 
 .ad-layer {
@@ -291,14 +335,14 @@ button {
 
 .ad-popin {
   position: absolute;
-  top: calc(86px + var(--y-offset));
-  left: calc(50% - 170px + var(--x-offset));
-  width: min(340px, calc(100vw - 28px));
-  border: 3px solid #17211d;
+  top: calc(122px + var(--y-offset));
+  right: calc(22px + var(--x-offset));
+  width: min(360px, calc(100vw - 28px));
+  border: 1px solid #d4dae0;
   border-radius: 8px;
-  padding: 12px;
+  padding: 14px;
   background: #ffffff;
-  box-shadow: 9px 9px 0 rgba(23, 33, 29, 0.72);
+  box-shadow: 0 22px 48px rgba(15, 27, 39, 0.34);
   pointer-events: auto;
 }
 
@@ -306,84 +350,97 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: -12px -12px 12px;
-  padding: 8px 10px;
-  border-bottom: 3px solid #17211d;
-  background: #f8d255;
-  font-size: 0.78rem;
-  font-weight: 900;
+  margin: -14px -14px 14px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e9ef;
+  background: #f8fafc;
+  color: #17212b;
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
 .ad-popin__chrome button,
 .modal-close {
-  width: 34px;
-  height: 34px;
-  border: 2px solid #17211d;
-  border-radius: 4px;
-  background: #d2473d;
-  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #c9d1db;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #4a5563;
   font-size: 1.15rem;
-  font-weight: 900;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .ad-popin__visual {
-  display: grid;
-  grid-template-columns: 1fr 0.7fr 0.45fr;
-  align-items: end;
-  gap: 8px;
-  height: 82px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 118px;
   margin-bottom: 12px;
-  padding: 8px;
-  background: #dbf0ff;
+  overflow: hidden;
+  border-radius: 8px;
+  padding: 14px;
+  background:
+    radial-gradient(circle at 75% 24%, rgba(255, 255, 255, 0.75) 0 14%, transparent 15%),
+    linear-gradient(135deg, #1266d6, #36c4b5 58%, #f5c24b);
+}
+
+.ad-popin__visual strong {
+  position: relative;
+  z-index: 1;
+  max-width: 150px;
+  color: #ffffff;
+  font-size: 1.55rem;
+  line-height: 1;
 }
 
 .ad-popin__visual span {
   display: block;
-  border: 2px solid #17211d;
-  background: #67c2a3;
-}
-
-.ad-popin__visual span:nth-child(1) {
-  height: 62px;
-}
-
-.ad-popin__visual span:nth-child(2) {
-  height: 42px;
-  background: #d2473d;
-}
-
-.ad-popin__visual span:nth-child(3) {
-  height: 72px;
-  background: #f8d255;
+  width: 84px;
+  height: 84px;
+  border: 10px solid rgba(255, 255, 255, 0.82);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .ad-popin h3 {
   margin: 0 0 8px;
-  font-size: 1.2rem;
+  color: #17212b;
+  font-size: 1.28rem;
+  line-height: 1.12;
 }
 
 .ad-popin p {
   margin: 0 0 12px;
-  color: #35433d;
+  color: #4b5c6c;
+}
+
+.ad-popin__label {
+  margin: 0 0 8px !important;
+  color: #1f5f97 !important;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .ad-popin [data-ad-action] {
   width: 100%;
-  border: 2px solid #17211d;
+  border: 0;
   border-radius: 6px;
-  padding: 10px;
-  background: #17211d;
+  padding: 12px;
+  background: #1266d6;
   color: #ffffff;
-  font-weight: 900;
+  font-weight: 800;
   cursor: pointer;
 }
 
 .ad-popin small {
   display: block;
   margin-top: 8px;
-  color: #5b625b;
-  font-weight: 700;
+  color: #7a8794;
+  font-weight: 600;
 }
 
 .payment-modal {
@@ -509,5 +566,6 @@ button {
 
   .ad-popin {
     left: 14px;
+    right: auto;
   }
 }
