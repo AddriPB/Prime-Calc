@@ -1,7 +1,8 @@
 import "./styles.css";
+import rickrollImage from "./assets/rickroll-young-rick.jpg";
 
 const CONFIG = {
-  DEMO_REDIRECT_URL: "https://example.com/",
+  DEMO_REDIRECT_URL: "https://coutdesretraites.fr/",
   SATIRE_MODE_ENABLED: true,
   ADS_LOOP_ENABLED: true,
   ADS_ON_DIGIT_ENABLED: true,
@@ -11,39 +12,54 @@ const CONFIG = {
 
 const adMessages = [
   {
-    brand: "NovaBank",
-    title: "Crédit instantané jusqu'à 5 000 €",
-    body: "Une réponse de principe en moins de 3 minutes pour financer vos projets du moment.",
-    cta: "Découvrir l'offre",
-    tag: "Finance",
+    brand: "NitroLink",
+    title: "Clique pour 9 boosts gratuits (promis juré)",
+    body: "Ton calcul est en file d'attente car le bot modérateur spamme des gifs dans #general.",
+    cta: "Réclamer le boost maudit",
+    tag: "#general",
   },
   {
-    brand: "Helio Mobile",
-    title: "Forfait 5G 180 Go à prix réduit",
-    body: "Appels illimités, roaming Europe inclus et activation immédiate en ligne.",
-    cta: "Comparer les forfaits",
-    tag: "Télécom",
+    brand: "RaidShield 0.1",
+    title: "Votre calcul a été signalé par 14 alt accounts",
+    body: "Veuillez résoudre ce captcha émotionnel avant de multiplier quoi que ce soit.",
+    cta: "Prouver que je suis admin",
+    tag: "MOD",
   },
   {
-    brand: "CasaFlex",
-    title: "Canapé modulable livré en 72 h",
-    body: "Composez votre salon avec des modules premium et une garantie confort 10 ans.",
-    cta: "Voir la collection",
-    tag: "Maison",
+    brand: "RatioBot",
+    title: "Ton résultat s'est pris un ratio monumental",
+    body: "La réponse sera floutée jusqu'à ce que tu acceptes les conditions du meme.",
+    cta: "Envoyer un sticker gênant",
+    tag: "RATIO",
   },
   {
-    brand: "Triply",
-    title: "Séjours urbains dès 49 € la nuit",
-    body: "Des hôtels bien notés, des annulations flexibles et des offres limitées cette semaine.",
-    cta: "Réserver maintenant",
-    tag: "Voyage",
+    brand: "PingMaster",
+    title: "@everyone ton calcul est prêt mais pas vraiment",
+    body: "Chaque clic ajoute trois notifications et une promesse vague de Nitro.",
+    cta: "Ping tout le serveur",
+    tag: "PING",
   },
   {
-    brand: "FitMeal",
-    title: "Menus protéinés livrés chez vous",
-    body: "Choisissez vos objectifs, recevez vos repas prêts à consommer du lundi au vendredi.",
-    cta: "Créer mon panier",
-    tag: "Bien-être",
+    brand: "LowEffortAI",
+    title: "Calcul généré par un bot de niveau 2",
+    body: "La précision dépend de l'humeur du salon vocal et de la qualité du micro.",
+    cta: "Lancer le soundboard",
+    tag: "BOT",
+  },
+];
+
+const rickMemeCards = [
+  {
+    caption: "Never gonna give you up",
+    punchline: "Ton resultat aussi ne va jamais arriver",
+  },
+  {
+    caption: "Rickroll premium",
+    punchline: "Le bouton egalite cache encore un refrain",
+  },
+  {
+    caption: "1987 called",
+    punchline: "Il veut recuperer ta calculatrice",
   },
 ];
 
@@ -143,11 +159,12 @@ function selectOperator(operator) {
   storedValue = Number(currentInput);
   pendingOperator = operator;
   shouldResetInput = true;
+  updateDisplay();
+
   if (CONFIG.SATIRE_MODE_ENABLED) {
     createAdPopup("operator");
     openDemoTab();
   }
-  updateDisplay();
 }
 
 function showPaymentModal() {
@@ -226,8 +243,9 @@ function createAdPopup(reason = "automatic") {
       <button type="button" aria-label="Fermer cette publicité" data-close-ad>×</button>
     </div>
     <div class="ad-popin__visual" aria-hidden="true">
+      <img src="${rickrollImage}" alt="">
       <strong>${ad.tag}</strong>
-      <span></span>
+      <span>RICKROLL</span>
     </div>
     <p class="ad-popin__label">Sponsorisé · Offre limitée</p>
     <h3>${ad.title}</h3>
@@ -244,9 +262,23 @@ function createAdPopup(reason = "automatic") {
   layer.append(node);
 }
 
+function createRickMemeCard(meme, index) {
+  return `
+    <article class="rick-meme rick-meme--${index % 3}">
+      <img src="${rickrollImage}" alt="Rick Astley jeune dans le meme Rickroll">
+      <div>
+        <span>meme internet certifie</span>
+        <strong>${meme.caption}</strong>
+        <p>${meme.punchline}</p>
+      </div>
+    </article>
+  `;
+}
+
 function createStaticAd(text, index) {
   return `
     <article class="static-ad static-ad--${index % 4}">
+      <img class="static-ad__meme" src="${rickrollImage}" alt="Rick Astley jeune style Rickroll">
       <span>${text.brand}</span>
       <strong>${text.title}</strong>
       <p>${text.body}</p>
@@ -263,71 +295,79 @@ function renderApp() {
   const app = document.querySelector("#app");
   const staticAds = [
     {
-      brand: "NovaBank",
-      title: "Prêt personnel express",
-      body: "Réponse immédiate pour vos projets.",
-      price: "TAEG dès 3,9%",
-      meta: "Sous conditions",
+      brand: "NitroLink",
+      title: "Nitro pas suspect",
+      body: "Un lien bleu, zéro regret.",
+      price: "0,00 €*",
+      meta: "*sauf dignité",
     },
     {
-      brand: "Helio Mobile",
-      title: "Forfait 5G 180 Go",
-      body: "Activation en quelques minutes.",
-      price: "9,99 €/mois",
-      meta: "Série limitée",
+      brand: "PingMaster",
+      title: "@everyone premium",
+      body: "Plus de bruit, moins de maths.",
+      price: "999 pings",
+      meta: "Mute impossible",
     },
     {
-      brand: "CasaFlex",
-      title: "Canapé modulable",
-      body: "Livraison rapide et garantie confort.",
-      price: "-35%",
-      meta: "Jusqu'à dimanche",
+      brand: "RatioBot",
+      title: "Pack ratio",
+      body: "Transforme 2+2 en débat.",
+      price: "-404%",
+      meta: "Avis mitigé",
     },
     {
-      brand: "Triply",
-      title: "Week-ends urbains",
-      body: "Hôtels bien notés, annulation flexible.",
-      price: "dès 49 €",
-      meta: "Places limitées",
+      brand: "ModoMall",
+      title: "Badge admin faux",
+      body: "Pouvoir imaginaire inclus.",
+      price: "13 rôles",
+      meta: "Kick non inclus",
     },
     {
-      brand: "FitMeal",
-      title: "Menus protéinés",
-      body: "Repas prêts à consommer livrés chez vous.",
-      price: "6,40 €/repas",
-      meta: "Sans engagement",
+      brand: "MemeAudit",
+      title: "Sticker jaune fluo",
+      body: "Aucun contexte, gros impact.",
+      price: "xD",
+      meta: "Cringe assumé",
     },
     {
-      brand: "ZenDrive",
-      title: "Assurance auto flexible",
-      body: "Contrat en ligne avec assistance 24/7.",
-      price: "dès 18 €/mois",
-      meta: "Devis immédiat",
+      brand: "VoiceLag",
+      title: "Micro saturé",
+      body: "Le résultat coupe toutes les 2 secondes.",
+      price: "128 kbps",
+      meta: "Echo garanti",
     },
     {
-      brand: "Cloudly",
-      title: "Stockage sécurisé 2 To",
-      body: "Sauvegarde automatique multi-appareils.",
-      price: "4,99 €/mois",
-      meta: "Essai 30 jours",
+      brand: "AltFarm",
+      title: "Comptes niveau 1",
+      body: "Pour voter contre la soustraction.",
+      price: "x37",
+      meta: "Suspect",
     },
     {
-      brand: "Prime Access",
-      title: "Résultat prioritaire",
-      body: "Accédez aux réponses sans attente.",
+      brand: "Prime Calc",
+      title: "Résultat flouté",
+      body: "Débloque la vérité, ou pas.",
       price: "99,99 €",
-      meta: "Offre premium",
+      meta: "Paywall troll",
     },
   ];
 
   app.innerHTML = `
     <main class="page-shell">
-      <header class="site-header">
-        <div>
-          <p class="eyebrow">Prime Calc</p>
-          <h1>La calculatrice qui vend avant de calculer</h1>
+      <header class="top-lock-ad" aria-label="Publicité impossible à fermer">
+        <div class="top-lock-ad__badge">TROLL<br>MODE</div>
+        <div class="top-lock-ad__content">
+          <p class="eyebrow">Discord calculator raid edition</p>
+          <h1>@everyone cette calculatrice est maintenant moche exprès</h1>
+          <p>Le calcul reprendra après 12 pings, 4 popups, un faux Nitro et une dispute inutile dans #maths.</p>
         </div>
-        <p class="satire-notice">Démonstration UX satirique. Aucune transaction, aucune régie externe, aucun tracking.</p>
+        <div class="top-lock-ad__deal">
+          <img src="${rickrollImage}" alt="Rick Astley jeune, meme Rickroll">
+          <span>Boost maudit</span>
+          <strong>LOL</strong>
+          <button type="button" data-top-ad-action>SPAMMER</button>
+          <small>Fermeture réservée aux modos</small>
+        </div>
       </header>
 
       <aside class="ad-rail ad-rail--left" aria-label="Publicités gauche">
@@ -338,14 +378,17 @@ function renderApp() {
         <div class="background-ads" aria-hidden="true">
           ${staticAds.map((ad) => `<span>${ad.brand} · ${ad.price}</span>`).join("")}
         </div>
+        <div class="rick-meme-strip" aria-label="Memes Rick Astley">
+          ${rickMemeCards.map(createRickMemeCard).join("")}
+        </div>
         <div class="calculator" data-calculator>
           <div class="blocked-overlay">
-            <strong>Calcul bloqué</strong>
-            <span>Le refus du paywall a rendu cette machine volontairement inutilisable.</span>
+            <strong>RATIO + BLOQUÉ</strong>
+            <span>Le bot a décidé que ton résultat manquait de vibes Discord.</span>
           </div>
           <div class="calculator__brand">
             <span>Prime Calc</span>
-            <small>Ad-funded edition</small>
+            <small>@everyone edition</small>
           </div>
           <output class="calculator__display" data-display>0</output>
           <p class="calculator__status" data-status>Saisie normale des chiffres active</p>
@@ -359,6 +402,7 @@ function renderApp() {
 
       <footer class="site-footer">
         ${staticAds.concat(staticAds.slice(0, 2)).map(createStaticAd).join("")}
+        <p class="asset-credit">Image meme Rickroll: thumbnail de la video officielle "Never Gonna Give You Up".</p>
       </footer>
     </main>
 
@@ -366,22 +410,27 @@ function renderApp() {
 
     <dialog class="payment-modal" data-payment-modal aria-labelledby="payment-title">
       <button class="modal-close" type="button" data-payment-close aria-label="Fermer le paywall">×</button>
-      <p class="eyebrow">Résultat disponible</p>
-      <h2 id="payment-title">Débloquez le calcul pour 99,99 €</h2>
-      <p>Accès prioritaire au résultat avec traitement premium. Aucune donnée bancaire n'est demandée dans cette démonstration.</p>
+      <p class="eyebrow">Résultat presque disponible</p>
+      <h2 id="payment-title">Débloque le calcul avec Nitro Ultra Fake</h2>
+      <p>Le salon #resultats est privé. Pour entrer, accepte un paywall qui ressemble volontairement à une mauvaise blague.</p>
       <div class="fake-card" aria-hidden="true">
-        <span>PRIME PAYWALL</span>
-        <strong>99,99 €</strong>
+        <span>NITRO ULTRA FAKE</span>
+        <strong>99 pings</strong>
       </div>
       <div class="modal-actions">
-        <button type="button" data-payment-accept>Refuser l'accès premium</button>
-        <button type="button" data-payment-cancel>Annuler</button>
+        <button type="button" data-payment-accept>Refuser et me faire ratio</button>
+        <button type="button" data-payment-cancel>Alt+F4 émotionnel</button>
       </div>
     </dialog>
   `;
 }
 
 function bindEvents() {
+  document.querySelector("[data-top-ad-action]").addEventListener("click", () => {
+    createAdPopup("operator");
+    openDemoTab();
+  });
+
   document.querySelector("[data-keypad]").addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button) return;
